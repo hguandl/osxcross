@@ -130,6 +130,16 @@ for SDK in $SDKS; do
   TMP=$(mktemp -d /tmp/XXXXXXXXXXX)
   cp -r $SDK $TMP &>/dev/null || true
 
+  # libc++ headers missing for macOS Mojave
+  if [[ $SDK == *10.14* ]]; then
+    popd &>/dev/null
+    popd &>/dev/null
+    mkdir -p "$TMP/$SDK/usr/include/c++"
+    tar Jxf "tarballs/c++-4.2.1.tar.xz" -C "$TMP/$SDK/usr/include/c++"
+    pushd $XCODEDIR &>/dev/null
+    pushd $SDKDIR &>/dev/null
+  fi
+
   pushd $XCODEDIR &>/dev/null
 
   # libc++ headers for C++11/C++14
